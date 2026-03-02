@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+
+# 3D dataset - ignore contents but keep folder
+data/*
+!data/.gitkeep
