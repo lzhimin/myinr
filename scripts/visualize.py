@@ -8,8 +8,18 @@ Supports:
 
 Usage:
     python scripts/visualize.py --file data/volume.vti --mode volume
+    python scripts/visualize.py --file data/volume.vti --mode volume --cmap coolwarm
     python scripts/visualize.py --file data/volume.vti --mode isosurface --isovalue 0.5
     python scripts/visualize.py --file data/volume.vti --mode slices --array Pressure
+
+Available colormaps:
+    viridis   — perceptually uniform, good general purpose (default)
+    plasma    — perceptually uniform, high contrast
+    coolwarm  — diverging blue-to-red, good for signed data
+    hot       — black-red-yellow-white, good for intensity fields
+    gray      — grayscale, good for medical/CT data
+    jet       — classic rainbow (not perceptually uniform)
+    turbo     — improved rainbow with better perceptual uniformity
 """
 
 import argparse
@@ -59,12 +69,15 @@ def make_demo_vti(shape=(64, 64, 64)) -> tuple[pv.ImageData, str]:
     return grid, "values"
 
 
-def visualize_volume(grid: pv.ImageData, array: str):
+COLORMAPS = ["viridis", "plasma", "coolwarm", "hot", "gray", "jet", "turbo"]
+
+
+def visualize_volume(grid: pv.ImageData, array: str, cmap: str = "viridis"):
     """Direct volume rendering."""
     pl = pv.Plotter()
-    pl.add_volume(grid, scalars=array, cmap="viridis", opacity="sigmoid")
+    pl.add_volume(grid, scalars=array, cmap=cmap, opacity="sigmoid")
     pl.add_scalar_bar(title=array)
-    pl.show(title="Volume Rendering")
+    pl.show(title=f"Volume Rendering [{cmap}]")
 
 
 def visualize_isosurface(grid: pv.ImageData, array: str, isovalue: float):
@@ -105,6 +118,8 @@ def main():
                         help="Name of the data array to visualize (default: first array)")
     parser.add_argument("--isovalue", type=float, default=0.5,
                         help="Isovalue for isosurface mode")
+    parser.add_argument("--cmap", type=str, default="viridis", choices=COLORMAPS,
+                        help="Colormap for volume rendering (default: viridis)")
     args = parser.parse_args()
 
     if args.file:
@@ -114,7 +129,7 @@ def main():
         grid, array = make_demo_vti()
 
     if args.mode == "volume":
-        visualize_volume(grid, array)
+        visualize_volume(grid, array, cmap=args.cmap)
     elif args.mode == "isosurface":
         visualize_isosurface(grid, array, args.isovalue)
     elif args.mode == "slices":
