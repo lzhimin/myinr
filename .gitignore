@@ -9,3 +9,6 @@ build/
 # 3D dataset - ignore contents but keep folder
 data/*
 !data/.gitkeep
+
+# Logs
+logs/
