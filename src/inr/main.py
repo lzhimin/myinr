@@ -1,18 +1,10 @@
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from inr import config
 
 def main():
-    data_dir = os.getenv("DATA_DIR", "data/")
-    output_dir = os.getenv("OUTPUT_DIR", "outputs/")
-    device = os.getenv("DEVICE", "cpu")
-    log_level = os.getenv("LOG_LEVEL", "INFO")
-
-    print(f"Data dir:   {data_dir}")
-    print(f"Output dir: {output_dir}")
-    print(f"Device:     {device}")
-    print(f"Log level:  {log_level}")
+    print(f"Data dir:   {config.DATA_DIR}")
+    print(f"Output dir: {config.OUTPUT_DIR}")
+    print(f"Device:     {config.DEVICE}")
+    print(f"Log level:  {config.LOG_LEVEL}")
 
 if __name__ == "__main__":
     main()
